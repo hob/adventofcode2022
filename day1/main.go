@@ -13,10 +13,12 @@ type Elf struct {
 }
 
 func main() {
-	max := Elf{0, 0}
+	first := Elf{0, 0}
+	second := Elf{0, 0}
+	third := Elf{0, 0}
 	current := Elf{0, 0}
 
-	file, err := os.Open("day1/input1.txt")
+	file, err := os.Open("day1/input.txt")
 	defer file.Close()
 
 	check(err)
@@ -27,17 +29,33 @@ func main() {
 		if currentText != "" {
 			currentVal, err := strconv.Atoi(currentText)
 			check(err)
-			println(fmt.Sprintf("current value = %d", currentVal))
 			current.calories = current.calories + currentVal
 		} else {
-			if current.calories > max.calories {
-				max = current
+			println(fmt.Sprintf("Elf number %d has %d calories", current.number, current.calories))
+			if current.calories > first.calories {
+				if first.calories > 0 {
+					second = first
+				}
+				if second.calories != 0 {
+					third = second
+				}
+				first = current
+			} else if current.calories > second.calories {
+				if second.calories > 0 {
+					third = second
+				}
+				second = current
+			} else if current.calories > third.calories {
+				third = current
 			}
 			current = Elf{current.number + 1, 0}
 			println(fmt.Sprintf("created elf number %d", current.number))
 		}
 	}
-	println(fmt.Sprintf("Elf number %d has %d calories", max.number, max.calories))
+	println(fmt.Sprintf("1st place (Elf number %d) has %d calories", first.number, first.calories))
+	println(fmt.Sprintf("2nd place (Elf number %d) has %d calories", second.number, second.calories))
+	println(fmt.Sprintf("3rd place (Elf number %d) has %d calories", third.number, third.calories))
+	println(first.calories + second.calories + third.calories)
 }
 
 func check(e error) {
