@@ -17,6 +17,8 @@ const (
 type Roshamboable interface {
 	// Winner Returns compares to input & returns the winner.  If both are equal, returns nil
 	Winner(comp Roshamboable) Roshamboable
+	WinsAgainst() Roshamboable
+	LosesTo() Roshamboable
 	GetValue() int
 }
 
@@ -66,15 +68,39 @@ func (s Scissors) GetValue() int {
 	return 3
 }
 
+func (r Rock) WinsAgainst() Roshamboable {
+	return Scissors{}
+}
+
+func (r Rock) LosesTo() Roshamboable {
+	return Paper{}
+}
+
+func (p Paper) WinsAgainst() Roshamboable {
+	return Rock{}
+}
+
+func (p Paper) LosesTo() Roshamboable {
+	return Scissors{}
+}
+
+func (s Scissors) WinsAgainst() Roshamboable {
+	return Paper{}
+}
+
+func (s Scissors) LosesTo() Roshamboable {
+	return Rock{}
+}
+
 var plays = map[string]Roshamboable{
 	"A": Rock{},
 	"B": Paper{},
 	"C": Scissors{},
 }
-var responses = map[string]Roshamboable{
-	"X": Rock{},
-	"Y": Paper{},
-	"Z": Scissors{},
+var results = map[string]int{
+	"X": -1, //lose
+	"Y": 0,  //tie
+	"Z": 1,  //win
 }
 
 func main() {
@@ -89,16 +115,20 @@ func main() {
 		currentText := scanner.Text()
 		split := strings.Split(currentText, " ")
 		play := plays[split[0]]
-		response := responses[split[1]]
-		score += response.GetValue()
-
-		result := play.Winner(response)
-		if result == response {
-			score += winValue
-		} else if result == play {
+		result := results[split[1]]
+		switch result {
+		case -1:
+			score += play.WinsAgainst().GetValue()
 			score += lossValue
-		} else {
+			break
+		case 0:
+			score += play.GetValue()
 			score += tieValue
+			break
+		case 1:
+			score += play.LosesTo().GetValue()
+			score += winValue
+			break
 		}
 	}
 	println(fmt.Sprintf("Final score: %d", score))
