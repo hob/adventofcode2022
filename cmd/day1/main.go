@@ -1,6 +1,7 @@
 package main
 
 import (
+	"advent22.spillane.farm/internal/util"
 	"bufio"
 	"fmt"
 	"os"
@@ -18,17 +19,17 @@ func main() {
 	third := Elf{0, 0}
 	current := Elf{0, 0}
 
-	file, err := os.Open("day1/input.txt")
+	file, err := os.Open("cmd/day1/input.txt")
 	defer file.Close()
 
-	error.Check(err)
+	util.CheckErr(err)
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
 		currentText := scanner.Text()
 		if currentText != "" {
 			currentVal, err := strconv.Atoi(currentText)
-			check(err)
+			util.CheckErr(err)
 			current.calories = current.calories + currentVal
 		} else {
 			println(fmt.Sprintf("Elf number %d has %d calories", current.number, current.calories))

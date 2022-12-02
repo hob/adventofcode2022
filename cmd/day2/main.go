@@ -1,6 +1,7 @@
 package main
 
 import (
+	"advent22.spillane.farm/internal/util"
 	"bufio"
 	"fmt"
 	"os"
@@ -104,10 +105,10 @@ var results = map[string]int{
 }
 
 func main() {
-	file, err := os.Open("day2/input.txt")
+	file, err := os.Open("cmd/day2/input.txt")
 	defer file.Close()
 
-	check(err)
+	util.CheckErr(err)
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 	score := 0
@@ -132,10 +133,4 @@ func main() {
 		}
 	}
 	println(fmt.Sprintf("Final score: %d", score))
-}
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
 }
