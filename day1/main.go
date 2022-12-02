@@ -21,7 +21,7 @@ func main() {
 	file, err := os.Open("day1/input.txt")
 	defer file.Close()
 
-	check(err)
+	error.Check(err)
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
@@ -56,10 +56,4 @@ func main() {
 	println(fmt.Sprintf("2nd place (Elf number %d) has %d calories", second.number, second.calories))
 	println(fmt.Sprintf("3rd place (Elf number %d) has %d calories", third.number, third.calories))
 	println(first.calories + second.calories + third.calories)
-}
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
 }
