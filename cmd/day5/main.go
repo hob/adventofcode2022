@@ -36,8 +36,8 @@ func main() {
 			//Remove from the "from" stack
 			stacks[from-1] = fromStack[move:]
 			//Add to the to stack
-			reversed := reverse(items)
-			stacks[to-1] = append(reversed, stacks[to-1]...)
+			copy := cp(items)
+			stacks[to-1] = append(copy, stacks[to-1]...)
 		}
 		i++
 	}
@@ -46,11 +46,12 @@ func main() {
 	}
 }
 
-func reverse(s []string) []string {
+func cp(s []string) []string {
 	reversed := make([]string, 0)
-	for i := len(s) - 1; i >= 0; i-- {
+	for i := 0; i < len(s); i++ {
 		reversed = append(reversed, s[i])
 	}
+
 	return reversed
 }
 
