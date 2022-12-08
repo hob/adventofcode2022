@@ -11,6 +11,8 @@ import (
 
 const (
 	largeFileSizeThreshold = 100000
+	spaceRequiredForUpdate = 30000000
+	totalDiskSpace         = 70000000
 )
 
 type File struct {
@@ -104,8 +106,20 @@ func main() {
 			currentDir.Children = append(currentDir.Children, file)
 		}
 	}
-	smallDirs := findSmallDirs(root)
-	println(fmt.Sprintf("total large file size bytes: %d", smallDirs))
+	//smallDirs := findSmallDirs(root)
+	//println(fmt.Sprintf("total small dir size bytes: %d", smallDirs))
+	freeSpace := totalDiskSpace - root.CalcSize()
+	println(fmt.Sprintf("total free space: %d", freeSpace))
+	spaceToFreeUp := spaceRequiredForUpdate - freeSpace
+	println(fmt.Sprintf("space needed to free up: %d", spaceToFreeUp))
+	closestMatch := root
+	walk(root, func(dir *File) {
+		size := dir.CalcSize()
+		if size > spaceToFreeUp && size < closestMatch.CalcSize() {
+			closestMatch = dir
+		}
+	})
+	println(fmt.Sprintf("closest match is %d bytes", closestMatch.CalcSize()))
 }
 
 func findSmallDirs(dir *File) int {
@@ -117,4 +131,13 @@ func findSmallDirs(dir *File) int {
 		sum += findSmallDirs(file)
 	}
 	return sum
+}
+
+func walk(dir *File, callback func(dir *File)) {
+	callback(dir)
+	for _, file := range dir.Children {
+		if file.IsDir {
+			walk(file, callback)
+		}
+	}
 }
