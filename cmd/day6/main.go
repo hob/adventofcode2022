@@ -18,10 +18,10 @@ func main() {
 	scanner.Scan()
 	line := scanner.Text()
 	i := 0
-	for !allUniqueChars(line[i : i+4]) {
+	for !allUniqueChars(line[i : i+14]) {
 		i++
 	}
-	println(fmt.Sprintf("Uniquness occurred at character %d with characters %s", i+4, line[i:i+4]))
+	println(fmt.Sprintf("Uniquness occurred at character %d with characters %s", i+14, line[i:i+14]))
 }
 
 func allUniqueChars(s string) bool {
